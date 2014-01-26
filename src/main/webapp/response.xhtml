@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <h:head>
+        <title>Here is what you have submitted:</title>
+    </h:head>
+    <h:body>
+
+      <h:outputText value="First Name:"/>
+      <h:outputText value="#{userBean.firstName}"/>
+      <br/>
+
+      <h:outputText value="Last Name:"/>
+      <h:outputText value="#{userBean.lastName}"/>
+      <br/>
+
+      <h:outputText value="Date of Birth (dd/MM/yyyy) :"/>
+      <h:outputText value="#{userBean.dateOfBirth}">
+        <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+      </h:outputText>
+      <br/>
+
+	  <c:choose>
+	    <c:when test="${userBean.mailToResidential}">
+          <h:outputText value="Your mail will be sent to your residential address."/>
+          <br/>
+          <h:outputText value="Address 1:"/>
+          <h:outputText value="#{userBean.addressOne}"/>
+          <br/>
+          <h:outputText value="Address 2:"/>
+          <h:outputText value="#{userBean.addressTwo}"/>
+          <br/>
+	    </c:when>
+	    <c:otherwise>
+          <h:outputText value="Your mail will be sent to your mailing address"/>
+          <br/>
+	      <h:outputText value="Address 1:"/>
+	      <h:outputText value="#{userBean.mailingAddressOne}"/>
+	      <br/>
+	      <h:outputText value="Address 2:"/>
+	      <h:outputText value="#{userBean.mailingAddressTwo}"/>
+	      <br/>
+	    </c:otherwise>
+	  </c:choose>
+      <br/>
+
+      <h:outputText value="You will be contacted using your "/><h:outputText value="#{userBean.phoneType.label.toLowerCase()}"/>
+      <br/>
+      <h:outputText value="Phone number : "/>
+      <c:if test="${not userBean.mobilePhoneInUse}">
+        <h:outputText value="(#{userBean.areaCode})"/>
+      </c:if>
+      <h:outputText value="#{userBean.phoneNumber}"/>
+      <br/>
+
+    </h:body>
+</html>
+

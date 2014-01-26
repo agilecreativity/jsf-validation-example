@@ -1,0 +1,182 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title>JSF Demo Page</title>
+    </h:head>
+    <f:loadBundle basename="com.jsf.demo.messages" var="msg"/>
+    <h:body>
+        <h:form id="entryForm">
+            <h:outputLabel for="firstName"><h:outputText value="#{msg.label_first_name}"/></h:outputLabel><br/>
+            <h:inputText id="firstName"
+              value="#{userBean.firstName}"
+              required="true"
+              requiredMessage="#{msg.value_is_required}"
+              validatorMessage="#{msg.value_must_be_letters}">
+              <f:validateRegex pattern="(^[A-Za-z]+$)"/>
+              <f:ajax event="blur" render="firstNameMessage"/>
+            </h:inputText>
+            <h:message
+              id="firstNameMessage"
+              showSummary="true"
+              showDetail="false"
+              for="firstName"
+              style="color:red;"/>
+            <br/>
+
+            <h:outputLabel for="lastName"><h:outputText value="#{msg.label_last_name}"/></h:outputLabel><br/>
+            <h:inputText id="lastName"
+              value="#{userBean.lastName}"
+              required="true"
+              requiredMessage="#{msg.value_is_required}"
+              validatorMessage="#{msg.value_must_be_letters}">
+              <f:validateRegex pattern="(^[A-Za-z]+$)"/>
+              <f:ajax event="blur" render="lastNameMessage"/>
+            </h:inputText>
+            <h:message
+              id="lastNameMessage"
+              showSummary="true"
+              showDetail="false"
+              for="lastName"
+              style="color: red;"/>
+            <br/>
+
+            <h:outputLabel for="dateOfBirth"><h:outputText value="#{msg.label_date_of_birth}"/></h:outputLabel><br/>
+            <h:inputText id="dateOfBirth"
+              value="#{userBean.dateOfBirth}"
+              required="true"
+              requiredMessage="#{msg.value_is_required}"
+              converter="customDateConverterImpl">
+              <f:ajax event="blur" render="dateOfBirthMessage"/>
+            </h:inputText>
+            <h:message
+              id="dateOfBirthMessage"
+              showSummary="true"
+              showDetail="false"
+              for="dateOfBirth"
+              style="color:red;"/>
+            <br/>
+
+            <h:outputText value="#{msg.label_residential_address_title}"/><br/>
+            <h:outputLabel for="residentialAddressOne"><h:outputText value="#{msg.label_residential_address_1}"/></h:outputLabel><br/>
+            <h:inputText id="residentialAddressOne"
+              value="#{userBean.addressOne}"
+              required="true"
+              requiredMessage="#{msg.value_is_required}">
+              <f:validator validatorId="residentialAddressValidator"/>
+              <f:ajax event="blur" render="residentialAddressOneMessage"/>
+            </h:inputText>
+            <h:message
+              id="residentialAddressOneMessage"
+              showSummary="true"
+              showDetail="false"
+              for="residentialAddressOne"
+              style="color:red;"/>
+            <br/>
+
+            <h:outputLabel for="residentialAddressTwo"><h:outputText value="#{msg.label_residential_address_2}"/></h:outputLabel><br/>
+            <h:inputText id="residentialAddressTwo"
+              value="#{userBean.addressTwo}"
+              required="true"
+              requiredMessage="#{msg.value_is_required}">
+              <f:validator validatorId="residentialAddressValidator"/>
+              <f:ajax event="blur" render="residentialAddressTwoMessage"/>
+            </h:inputText>
+            <h:message
+              id="residentialAddressTwoMessage"
+              showSummary="true"
+              showDetail="false"
+              for="residentialAddressTwo"
+              style="color:red;"/>
+            <br/>
+
+            <h:outputText value="#{msg.label_mailing_option}"/><br/>
+            <h:selectOneRadio value="#{userBean.mailToResidential}">
+              <f:selectItem itemValue="#{true}" itemLabel="Yes"/>
+              <f:selectItem itemValue="#{false}" itemLabel="No"/>
+              <f:ajax listener="#{userBean.resetResidentialData}" render="@all" />
+            </h:selectOneRadio>
+
+            <h:panelGroup id="mailGroupPanel" rendered="#{not userBean.mailToResidential}" >
+                <h:outputText value="#{msg.label_mailing_address_title}"/><br/>
+                <h:outputLabel for="mailingAddressOne"><h:outputText value="#{msg.label_mailing_address_1}"/></h:outputLabel><br/>
+	            <h:inputText id="mailingAddressOne"
+                  value="#{userBean.mailingAddressOne}"
+	              required="true"
+	              requiredMessage="#{msg.value_is_required}"
+	              rendered="#{not userBean.mailToResidential}">
+	              <f:validator validatorId="mailingAddressValidator"/>
+	              <f:ajax event="blur" render="mailingAddressOneMessage"/>
+	            </h:inputText>
+	            <h:message id="mailingAddressOneMessage"
+	              showSummary="true"
+	              showDetail="false"
+	              for="mailingAddressOne"
+	              style="color:red;"/>
+	            <br/>
+
+                <h:outputLabel for="mailingAddressTwo"><h:outputText value="#{msg.label_mailing_address_2}"/></h:outputLabel><br/>
+                <h:inputText id="mailingAddressTwo"
+                  value="#{userBean.mailingAddressTwo}"
+                  required="true"
+                  requiredMessage="#{msg.value_is_required}"
+                  rendered="#{not userBean.mailToResidential}">
+                  <f:validator validatorId="mailingAddressValidator"/>
+                  <f:ajax event="blur" render="mailingAddressTwoMessage"/>
+                </h:inputText>
+                <h:message id="mailingAddressTwoMessage"
+                  showSummary="true"
+                  showDetail="false"
+                  for="mailingAddressTwo"
+                  style="color: red;"/>
+                <br/>
+			</h:panelGroup>
+
+            <h:panelGrid id="phonePanel" columns="1">
+
+              <f:event type="postValidate" listener="#{userBean.validatePhoneNumber}"/>
+
+              <h:outputText value="#{msg.label_primary_phone}"/>
+
+              <h:selectOneMenu id="phoneType" value="#{userBean.phoneType}">
+                <f:selectItems
+                  value="#{userBean.phoneTypes}"
+                  var="phoneType"
+                  itemValue="#{phoneType}"
+                  itemLabel="#{phoneType.label}"/>
+                 <f:ajax listener="#{userBean.resetAreaCode}" render="@all" />
+              </h:selectOneMenu>
+
+              <h:panelGrid columns="1" id="phoneAreaPanel" layout="block" rendered="#{not userBean.mobilePhoneInUse}" >
+
+                <h:outputLabel for="phoneArea">
+                  <h:outputText value="#{msg.label_phone_area}"/>
+                </h:outputLabel>
+                <h:inputText id="phoneArea"
+                  value="#{userBean.areaCode}"
+                  size="2"
+                  required="false"/>
+              </h:panelGrid>
+
+              <h:outputLabel for="phoneNumber">
+                <h:outputText value="#{msg.label_phone_number}"/>
+              </h:outputLabel>
+              <h:inputText id="phoneNumber"
+                value="#{userBean.phoneNumber}"
+                requiredMessage="#{msg.value_is_required}"
+                size="10"
+                required="true">
+              </h:inputText>
+
+           </h:panelGrid>
+
+           <h:message for="phonePanel" style="color:red;"/>
+           <br/>
+
+          <h:commandButton id="submit" action="response?faces-redirect=true" value="Submit"/>
+        </h:form>
+    </h:body>
+</html>
